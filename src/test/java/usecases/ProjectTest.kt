@@ -48,11 +48,10 @@ class ProjectTest {
         } else if (name.isEmpty()) {
                 gui.validation_failed(ValidationErrors(listOf(mapOf("field" to "name", "validation" to "required"))))
             } else {
-                val project = repo.create(name)
+                val project = repo.save(name)
                 gui.createSucceeded(project.name)
             }
         }
-
     }
 
 class InMemoryProjectRepositoryTest {
@@ -61,16 +60,30 @@ class InMemoryProjectRepositoryTest {
     fun save_and_retrieve() {
         val repo = InMemoryProjectRepository()
 
-        repo.create("the name")
-        assertThat(repo.findByName("the name")).isNotNull()
+        repo.save("twitter for uber")
+        repo.save("cats for dogs")
+        assertThat(repo.findByName("twitter for uber")).isNotNull()
+        assertThat(repo.findByName("cats for dogs")).isNotNull()
+    }
+
+    @Test
+    fun save_creates_a_unique_id() {
+        val repo = InMemoryProjectRepository()
+
+        val twitterForUber = repo.save("twitter for uber")
+        val catsForDogs = repo.save("cats for dogs")
+        assertThat(twitterForUber.id).isGreaterThan(0)
+        assertThat(catsForDogs.id).isGreaterThan(0)
+        assertThat(twitterForUber.id).isNotEqualTo(catsForDogs.id)
     }
 }
 
 class InMemoryProjectRepository : ProjectRepository {
     val projects = HashMap<String, Project>()
+    var currentId = 1L
 
-    override fun create(s: String) : Project {
-        val project = Project(s)
+    override fun save(s: String) : Project {
+        val project = Project(s, currentId++)
         projects[s] = project
 
         return project
@@ -86,11 +99,11 @@ interface ProjectRepository {
 
     fun findByName(name: String) : Project?
 
-    fun create(s: String) : Project
+    fun save(s: String) : Project
 
 }
 
-data class Project(val name: String) {
+data class Project(val name: String, val id: Long) {
 
 }
 
