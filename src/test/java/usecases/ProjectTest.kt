@@ -91,9 +91,9 @@ class InMemoryProjectRepository : ProjectRepository {
     val projects = HashMap<String, Project>()
     var currentId = 1L
 
-    override fun save(s: String) : Project {
-        val project = Project(s, currentId++)
-        projects[s] = project
+    override fun save(name: String) : Project {
+        val project = Project(name, currentId++)
+        projects[name] = project
 
         return project
     }
@@ -108,7 +108,7 @@ interface ProjectRepository {
 
     fun findByName(name: String) : Project?
 
-    fun save(s: String) : Project
+    fun save(name: String) : Project
 
 }
 
