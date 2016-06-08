@@ -2,6 +2,7 @@ package usecases
 
 import org.assertj.core.api.KotlinAssertions.assertThat
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 import java.util.*
 
@@ -54,11 +55,19 @@ class ProjectTest {
         }
     }
 
-class InMemoryProjectRepositoryTest {
+class InMemoryProjectRepositoryTest : ProjectRepositoryTest() {
+    override fun createProjectRepository(): ProjectRepository {
+        return InMemoryProjectRepository()
+    }
+}
+
+abstract class ProjectRepositoryTest {
+
+    abstract fun createProjectRepository() : ProjectRepository
 
     @Test
     fun save_and_retrieve() {
-        val repo = InMemoryProjectRepository()
+        val repo = createProjectRepository()
 
         repo.save("twitter for uber")
         repo.save("cats for dogs")
@@ -68,7 +77,7 @@ class InMemoryProjectRepositoryTest {
 
     @Test
     fun save_creates_a_unique_id() {
-        val repo = InMemoryProjectRepository()
+        val repo = createProjectRepository()
 
         val twitterForUber = repo.save("twitter for uber")
         val catsForDogs = repo.save("cats for dogs")
