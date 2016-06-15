@@ -6,4 +6,6 @@ interface ProjectRepository {
 
     fun save(name: String) : Project
 
+    fun findAll(): List<Project>
+
 }

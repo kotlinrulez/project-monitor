@@ -1,6 +1,7 @@
 package usecases
 
 import org.assertj.core.api.KotlinAssertions
+import org.assertj.core.api.KotlinAssertions.assertThat
 import org.junit.Test
 
 abstract class ProjectRepositoryTest {
@@ -13,8 +14,8 @@ abstract class ProjectRepositoryTest {
 
         repo.save("twitter for uber")
         repo.save("cats for dogs")
-        KotlinAssertions.assertThat(repo.findByName("twitter for uber")).isNotNull()
-        KotlinAssertions.assertThat(repo.findByName("cats for dogs")).isNotNull()
+        assertThat(repo.findByName("twitter for uber")).isNotNull()
+        assertThat(repo.findByName("cats for dogs")).isNotNull()
     }
 
     @Test
@@ -23,8 +24,19 @@ abstract class ProjectRepositoryTest {
 
         val twitterForUber = repo.save("twitter for uber")
         val catsForDogs = repo.save("cats for dogs")
-        KotlinAssertions.assertThat(twitterForUber.id).isGreaterThan(0)
-        KotlinAssertions.assertThat(catsForDogs.id).isGreaterThan(0)
-        KotlinAssertions.assertThat(twitterForUber.id).isNotEqualTo(catsForDogs.id)
+        assertThat(twitterForUber.id).isGreaterThan(0)
+        assertThat(catsForDogs.id).isGreaterThan(0)
+        assertThat(twitterForUber.id).isNotEqualTo(catsForDogs.id)
+    }
+
+    @Test
+    fun save_and_retrieve_all() {
+        val repo = createProjectRepository()
+
+        repo.save("twitter for uber")
+        repo.save("cats for dogs")
+        val projects = repo.findAll()
+        assertThat(projects).asList().isNotEmpty()
+        assertThat(projects.map(Project::name)).asList().contains("twitter for uber", "cats for dogs")
     }
 }

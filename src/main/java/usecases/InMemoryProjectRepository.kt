@@ -4,8 +4,8 @@ import java.util.*
 
 class InMemoryProjectRepository : ProjectRepository {
     val projects = HashMap<String, Project>()
-    var currentId = 1L
 
+    var currentId = 1L
     override fun save(name: String) : Project {
         val project = Project(name, currentId++)
         projects[name] = project
@@ -15,6 +15,10 @@ class InMemoryProjectRepository : ProjectRepository {
 
     override fun findByName(name: String): Project? {
         return projects[name]
+    }
+
+    override fun findAll(): List<Project> {
+        return projects.values.toList()
     }
 
 }

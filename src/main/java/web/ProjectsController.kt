@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import usecases.Gui
-import usecases.ProjectRepository
-import usecases.ValidationErrors
-import usecases.create_project
+import usecases.*
 
 @Controller
 @RequestMapping("projects")
@@ -27,6 +24,32 @@ class ProjectsController @Autowired constructor(private val projectRepository: P
                 }
             }
         }
+    }
+
+    @RequestMapping
+    @ResponseBody
+    fun index(): String {
+        val findProjectsObserver = FindProjectsObserver()
+        find_projects(observer = findProjectsObserver, repo = projectRepository)
+        return createHTML().html {
+            body {
+                h1 {
+                    +"Projects"
+                }
+
+                ul {
+                    findProjectsObserver.projects.forEach {
+                        li {
+                            +it.name
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun find_projects(observer: FindProjectsObserver, repo: ProjectRepository) {
+        observer.projects = repo.findAll()
     }
 
     @RequestMapping(method = arrayOf(RequestMethod.POST))
@@ -48,6 +71,10 @@ class ProjectsController @Autowired constructor(private val projectRepository: P
         }
     }
 
+}
+
+class FindProjectsObserver {
+    var projects: List<Project> = listOf()
 }
 
 class CreateProjectObserver : Gui {

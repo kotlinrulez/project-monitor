@@ -41,5 +41,18 @@ class ProjectsControllerTest() {
 
         assertThat(projectRepository.findByName("Twitter for cats")).isNotNull()
     }
+
+    @Test
+    fun index_projects() {
+        mvc.perform(
+                post("/projects").param("name", "Twitter for cats")
+        )
+
+        mvc.perform(
+                get("/projects")
+        ).andExpect(status().isOk)
+        .andExpect(content().string(containsString("Projects")))
+        .andExpect(content().string(containsString("Twitter for cats")))
+    }
 }
 
