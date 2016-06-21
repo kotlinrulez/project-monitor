@@ -1,6 +1,5 @@
 package usecases
 
-import org.assertj.core.api.KotlinAssertions
 import org.assertj.core.api.KotlinAssertions.assertThat
 import org.junit.Test
 
