@@ -65,7 +65,7 @@ class ProjectsController @Autowired constructor(private val projectRepository: P
             form(method = FormMethod.post, action = "/projects") {
                 label {
                     +"Project Name"
-                    input(type = InputType.text)
+                    input(name = "name", type = InputType.text)
                 }
             }
         }
