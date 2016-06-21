@@ -77,7 +77,7 @@ class FindProjectsObserver {
     var projects: List<Project> = listOf()
 }
 
-class CreateProjectObserver : Gui {
+class CreateProjectObserver : create_project.Observer {
     var view: String = ""
 
     override fun validation_failed(errors: ValidationErrors) {

@@ -7,8 +7,8 @@ class ProjectTest {
 
     @Test
     fun name_is_required() {
-        val guiSpy = GuiSpy()
-        create_project(name = "", gui = guiSpy, repo = InMemoryProjectRepository())
+        val guiSpy = CreateProjectObserverSpy()
+        create_project(name = "", observer = guiSpy, repo = InMemoryProjectRepository())
 
         assertThat(guiSpy.validationFailedCalls).asList().contains(mapOf("field" to "name", "validation" to "required"))
         assertThat(guiSpy.validationFailedCalls.size).isEqualTo(1)
@@ -17,9 +17,9 @@ class ProjectTest {
 
     @Test
     fun save_and_retrieve() {
-        val guiSpy = GuiSpy()
+        val guiSpy = CreateProjectObserverSpy()
         val repo = InMemoryProjectRepository()
-        create_project(name = "A project name", gui = guiSpy, repo = repo)
+        create_project(name = "A project name", observer = guiSpy, repo = repo)
 
         assertThat(guiSpy.createSucceededCalls.size).isEqualTo(1)
         assertThat(guiSpy.validationFailedCalls.size).isEqualTo(0)
@@ -30,10 +30,10 @@ class ProjectTest {
     @Test
     fun name_is_unique() {
         val repo = InMemoryProjectRepository()
-        create_project(name = "A project name", gui = GuiSpy(), repo = repo)
+        create_project(name = "A project name", observer = CreateProjectObserverSpy(), repo = repo)
 
-        val guiSpy = GuiSpy()
-        create_project(name = "A project name", gui = guiSpy, repo = repo)
+        val guiSpy = CreateProjectObserverSpy()
+        create_project(name = "A project name", observer = guiSpy, repo = repo)
 
         assertThat(guiSpy.validationFailedCalls).asList().contains(mapOf("field" to "name", "validation" to "unique"))
         assertThat(guiSpy.validationFailedCalls.size).isEqualTo(1)

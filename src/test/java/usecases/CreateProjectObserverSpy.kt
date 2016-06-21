@@ -2,7 +2,7 @@ package usecases
 
 import java.util.*
 
-class GuiSpy() : Gui {
+class CreateProjectObserverSpy() : create_project.Observer {
 
     override fun createSucceeded(id: String) {
         createSucceededCalls.add(id)
