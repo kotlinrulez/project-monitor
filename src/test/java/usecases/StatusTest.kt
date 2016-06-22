@@ -1,6 +1,8 @@
 package usecases
 
 import org.assertj.core.api.KotlinAssertions.assertThat
+import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
@@ -38,7 +40,7 @@ class ProjectStatusTest {
     @Test
     fun getProjectStatus_forProjectWithPreviousPassedBuild_isPassing() {
         projectRepo.save("Twitter for Cats")
-        reportBuildPassed("Twitter for Cats", repo=statusRepo)
+        reportBuildPassed("Twitter for Cats", repo = statusRepo)
         assertThat(getProjectStatus(
                 projectName = "Twitter for Cats",
                 projectRepo = projectRepo,
@@ -49,7 +51,7 @@ class ProjectStatusTest {
     @Test
     fun getProjectStatus_forProjectWithPreviousFailedBuild_isPassing() {
         projectRepo.save("Twitter for Cats")
-        reportBuildFailed("Twitter for Cats", repo=statusRepo)
+        reportBuildFailed("Twitter for Cats", repo = statusRepo)
         assertThat(getProjectStatus(
                 projectName = "Twitter for Cats",
                 projectRepo = projectRepo,
@@ -57,34 +59,6 @@ class ProjectStatusTest {
         ).isInstanceOf(GetProjectStatusResult.Failing::class.java)
     }
 
-    private fun reportBuildFailed(projectName: String, repo: StatusRepository) {
-        repo.save(projectName, "FAILING")
-    }
-
-    private fun reportBuildPassed(projectName: String, repo: StatusRepository) {
-        repo.save(projectName, "PASSING")
-    }
-
-    private fun getProjectStatus(projectName: String,
-                                 projectRepo: ProjectRepository,
-                                 statusRepo: StatusRepository) : GetProjectStatusResult {
-        if (projectRepo.findByName(projectName) == null) {
-            return GetProjectStatusResult.ProjectNotFound()
-        }
-
-        when(statusRepo.findByName(projectName)) {
-            null -> return GetProjectStatusResult.Unknown()
-            "PASSING" -> return GetProjectStatusResult.Passing()
-            "FAILING" -> return GetProjectStatusResult.Failing()
-        }
-
-        return GetProjectStatusResult.Unknown()
-    }
-
-    sealed class GetProjectStatusResult {
-        class Unknown(): GetProjectStatusResult()
-        class ProjectNotFound(): GetProjectStatusResult()
-        class Passing(): GetProjectStatusResult()
-        class Failing : GetProjectStatusResult() {}
-    }
 }
+
+
